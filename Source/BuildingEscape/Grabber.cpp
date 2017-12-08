@@ -1,28 +1,18 @@
-// Copyright Ben Tristem 2016.
-
 #include "BuildingEscape.h"
 #include "Grabber.h"
-
 #define OUT
 
-// Sets default values for this component's properties
 UGrabber::UGrabber()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
 	bWantsBeginPlay = true;
 	PrimaryComponentTick.bCanEverTick = true;
 }
-
-// Called when the game starts
 void UGrabber::BeginPlay()
 {
 	Super::BeginPlay();
 	FindPhysicsHandleComponent();
 	SetupInputComponent();
 }
-
-/// Look for attached Physics Handle
 void UGrabber::FindPhysicsHandleComponent()
 {
 	PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
@@ -31,8 +21,6 @@ void UGrabber::FindPhysicsHandleComponent()
 		UE_LOG(LogTemp, Error, TEXT("%s missing physics handle component"), *GetOwner()->GetName())
 	}
 }
-
-/// Look for attached Input Component (only appears at run time)
 void UGrabber::SetupInputComponent()
 {
 	InputComponent = GetOwner()->FindComponentByClass<UInputComponent>();
@@ -47,16 +35,13 @@ void UGrabber::SetupInputComponent()
 	}
 }
 
-// Called every frame
 void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	if (!PhysicsHandle) { return; }
-	// if the physics handle is attached
 	if (PhysicsHandle->GrabbedComponent)
 	{
-		// move the object that we're holding
 		PhysicsHandle->SetTargetLocation(GetReachLineEnd());
 	}
 }
